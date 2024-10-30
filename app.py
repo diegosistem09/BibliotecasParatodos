@@ -40,28 +40,4 @@ if __name__ == '__main__':
 #app = Flask(__name__)
 
 # Ruta para convertir texto en audio
-@app.route('/text-to-audio', methods=['POST'])
-def convert_text_to_audio():
-    # Verificar si el texto fue enviado en la solicitud
-    if not request.json or 'texto' not in request.json:
-        return jsonify({"error": "No se envió ningún texto"}), 400
 
-    texto = request.json['texto']
-    try:
-        # Convertir el texto a audio usando gTTS
-        tts = gTTS(text=texto, lang='es')
-        audio_file_path = "output_audio.mp3"
-        tts.save(audio_file_path)  # Guardar el archivo de audio
-
-        # Devolver el archivo de audio al cliente
-        return send_file(audio_file_path, as_attachment=True)
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-    finally:
-        # Limpiar el archivo de audio temporal si existe
-        if os.path.exists(audio_file_path):
-            os.remove(audio_file_path)
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
